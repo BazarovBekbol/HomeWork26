@@ -12,23 +12,15 @@ public class MovieManager {
     }
     private MovieCollection loadMovies(String filePath) {
         try {
-            String json = new String(Files.readAllBytes(Paths.get(filePath))); // Чтение JSON файла
+            String json = new String(Files.readAllBytes(Paths.get(filePath)));
             Gson gson = new Gson();
-            return gson.fromJson(json, MovieCollection.class); // Десериализация JSON в объект MovieCollection
+            return gson.fromJson(json, MovieCollection.class);
         } catch (Exception e) {
             e.printStackTrace();
-            return new MovieCollection(); // В случае ошибки возвращаем пустую коллекцию
+            return new MovieCollection();
         }
     }
 
-    // Пример метода для отображения фильмов
-    public void displayMovies() {
-        if (movieCollection != null && movieCollection.getMovies() != null) {
-            movieCollection.getMovies().forEach(movie ->
-                    System.out.printf("Name: %s, Year: %d, Director: %s\n",
-                            movie.getName(), movie.getYear(), movie.getDirector().getFullName()));
-        }
-    }
 
     public void displayMoviesByActor(String actorName) {
         movieCollection.getMovies().stream()
