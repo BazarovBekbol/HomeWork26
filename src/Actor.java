@@ -5,8 +5,8 @@ public class Actor {
     public String getFullName() {
         return fullName;
     }
+
     public String getRole() {
         return role;
     }
-
 }

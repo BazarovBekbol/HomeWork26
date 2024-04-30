@@ -8,12 +8,15 @@ public class Movie {
     public String getName() {
         return name;
     }
+
     public int getYear() {
         return year;
     }
+
     public Director getDirector() {
         return director;
     }
+
     public List<Actor> getCast() {
         return cast;
     }
