@@ -2,28 +2,19 @@ public class Main {
     public static void main(String[] args) {
         MovieManager manager = new MovieManager("src/movies.json");
 
-        System.out.println("All movies:");
-        manager.displayMovies();
+        System.out.println("Movies by actor 'Ian McKellen':");
+        manager.displayMoviesByActor("Ian McKellen");
 
-        System.out.println("\nMovies containing 'Hobbit' in the title:");
-        manager.searchMoviesByTitle("Hobbit");
+        System.out.println("\nMovies directed by 'Peter Jackson':");
+        manager.displayMoviesByDirector("Peter Jackson");
 
-        System.out.println("\nMovies sorted by name ascending:");
-        manager.sortMoviesByName(true);
+        System.out.println("\nMovies released in 2019:");
+        manager.displayMoviesByYear(2019);
 
-        System.out.println("\nMovies sorted by name descending:");
-        manager.sortMoviesByName(false);
+        System.out.println("\nRoles played by 'Martin Freeman':");
+        manager.displayRolesByActor("Martin Freeman");
 
-        System.out.println("\nMovies sorted by year ascending:");
-        manager.sortMoviesByYear(true);
-
-        System.out.println("\nMovies sorted by year descending:");
-        manager.sortMoviesByYear(false);
-
-        System.out.println("\nMovies sorted by director's name ascending:");
-        manager.sortMoviesByDirector(true);
-
-        System.out.println("\nMovies sorted by director's name descending:");
-        manager.sortMoviesByDirector(false);
+        System.out.println("\nAll actors sorted:");
+        manager.displayAllActorsSorted();
     }
 }

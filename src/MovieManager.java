@@ -3,8 +3,6 @@ import com.google.gson.Gson;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MovieManager {
     private MovieCollection movieCollection;
@@ -12,57 +10,57 @@ public class MovieManager {
     public MovieManager(String filePath) {
         this.movieCollection = loadMovies(filePath);
     }
-
     private MovieCollection loadMovies(String filePath) {
         try {
-            String json = new String(Files.readAllBytes(Paths.get(filePath)));
+            String json = new String(Files.readAllBytes(Paths.get(filePath))); // Чтение JSON файла
             Gson gson = new Gson();
-            return gson.fromJson(json, MovieCollection.class);
+            return gson.fromJson(json, MovieCollection.class); // Десериализация JSON в объект MovieCollection
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new MovieCollection(); // В случае ошибки возвращаем пустую коллекцию
         }
     }
 
+    // Пример метода для отображения фильмов
     public void displayMovies() {
-        movieCollection.getMovies().forEach(movie -> System.out.printf("Name: %s, Year: %d, Director: %s\n", movie.getName(), movie.getYear(), movie.getDirector().getFullName()));
-    }
-
-    public void searchMoviesByTitle(String query) {
-        List<Movie> foundMovies = movieCollection.getMovies().stream()
-                .filter(movie -> movie.getName().toLowerCase().contains(query.toLowerCase()))
-                .collect(Collectors.toList());
-        if (foundMovies.isEmpty()) {
-            System.out.println("No movies found.");
-        } else {
-            foundMovies.forEach(movie -> System.out.printf("Found: %s (%d)\n", movie.getName(), movie.getYear()));
+        if (movieCollection != null && movieCollection.getMovies() != null) {
+            movieCollection.getMovies().forEach(movie ->
+                    System.out.printf("Name: %s, Year: %d, Director: %s\n",
+                            movie.getName(), movie.getYear(), movie.getDirector().getFullName()));
         }
     }
 
-    public void sortMoviesByYear(boolean ascending) {
-        if (ascending) {
-            movieCollection.getMovies().sort(Comparator.comparingInt(Movie::getYear));
-        } else {
-            movieCollection.getMovies().sort(Comparator.comparingInt(Movie::getYear).reversed());
-        }
-        displayMovies();
+    public void displayMoviesByActor(String actorName) {
+        movieCollection.getMovies().stream()
+                .filter(movie -> movie.getCast().stream().anyMatch(actor -> actor.getFullName().equalsIgnoreCase(actorName)))
+                .forEach(movie -> System.out.println(movie.getName()));
     }
 
-    public void sortMoviesByName(boolean ascending) {
-        if (ascending) {
-            movieCollection.getMovies().sort(Comparator.comparing(Movie::getName));
-        } else {
-            movieCollection.getMovies().sort(Comparator.comparing(Movie::getName).reversed());
-        }
-        displayMovies();
+    public void displayMoviesByDirector(String directorName) {
+        movieCollection.getMovies().stream()
+                .filter(movie -> movie.getDirector().getFullName().equalsIgnoreCase(directorName))
+                .forEach(movie -> System.out.println(movie.getName()));
     }
 
-    public void sortMoviesByDirector(boolean ascending) {
-        if (ascending) {
-            movieCollection.getMovies().sort(Comparator.comparing(movie -> movie.getDirector().getFullName()));
-        } else {
-            movieCollection.getMovies().sort(Comparator.comparing(movie -> movie.getDirector().getFullName()).reversed());
-        }
-        displayMovies();
+    public void displayMoviesByYear(int year) {
+        movieCollection.getMovies().stream()
+                .filter(movie -> movie.getYear() == year)
+                .forEach(movie -> System.out.println(movie.getName()));
+    }
+
+    public void displayRolesByActor(String actorName) {
+        movieCollection.getMovies().stream()
+                .flatMap(movie -> movie.getCast().stream())
+                .filter(actor -> actor.getFullName().equalsIgnoreCase(actorName))
+                .distinct()
+                .forEach(actor -> System.out.println(actor.getFullName() + " - " + actor.getRole()));
+    }
+
+    public void displayAllActorsSorted() {
+        movieCollection.getMovies().stream()
+                .flatMap(movie -> movie.getCast().stream())
+                .distinct()
+                .sorted(Comparator.comparing(Actor::getFullName))
+                .forEach(actor -> System.out.println(actor.getFullName() + " - " + actor.getRole()));
     }
 }
